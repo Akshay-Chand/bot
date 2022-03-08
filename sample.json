@@ -1,0 +1,15 @@
+{
+    "finished": false,
+    "urlready": 0,
+    "result": 0,
+    "urlworking": 1,
+    "urlcount": 1,
+    "files": [
+        {
+            "downloaded": 298844160,
+            "size": 573042696,
+            "status": "downloading",
+            "url": "http:\/\/rem.streaam.net:8080\/AgADIg3622"
+        }
+    ]
+}
