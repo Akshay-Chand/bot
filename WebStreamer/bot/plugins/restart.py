@@ -15,6 +15,7 @@ from WebStreamer.__main__ import * # yea
 from logging.handlers import RotatingFileHandler
 
 @StreamBot.on_message(filters.command(["restart"]))
-async def restart(f: Message,*args):
+async def restart(bot, message,*args):
+    await message.reply_text(text="<b>Bot Restarting.... </b>") 
     args = [sys.executable, "-m", "WebStreamer"]
     os.execl(sys.executable,*args)
