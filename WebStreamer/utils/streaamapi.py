@@ -23,7 +23,7 @@ def wait_time(chat_id: int):
         print('create dic ', waiting[chat_id])
         return False
     else:
-        if waiting[chat_id] >= 2:
+        if waiting[chat_id] >= 5:
             print(f'wait {chat_id} - {waiting[chat_id]}')
             return True
         else:
