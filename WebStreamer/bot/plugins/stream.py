@@ -15,6 +15,10 @@ import traceback
 import asyncio
 import aiohttp
 import string
+import os
+import shutil
+import sys
+import io
 
 
 
@@ -121,15 +125,17 @@ async def media_receive_handler(c, m: Message):
             except TimeoutError:
                 print("Couldn't connect to the site URL..!")
             except Exception:
-                traceback.print_exc()
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url, params=data) as resp:
-            resp=await resp.json()
-            print(resp)
-    waiting[m.chat.id] = waiting[m.chat.id] - 1
-@StreamBot.on_message(filters.command('stat') & filters.user(Var.ADMIN))
-async def stat(_, m):
-    print(waiting)
-    await m.reply_text(
-        text=waiting
-    )
+                await message.reply_text(text="<b>Bot Restarting Due To Errors.... </b>") 
+                args = [sys.executable, "-m", "WebStreamer"]
+                os.execl(sys.executable,*args)
+                async with aiohttp.ClientSession() as session:
+                    async with session.get(url, params=data) as resp:
+                        resp=await resp.json()
+                        print(resp)
+                        waiting[m.chat.id] = waiting[m.chat.id] - 1
+                        @StreamBot.on_message(filters.command('stat') & filters.user(Var.ADMIN))
+                        async def stat(_, m):
+                            print(waiting)
+                            await m.reply_text(
+                                text=waiting
+                            )
