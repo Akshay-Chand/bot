@@ -50,11 +50,11 @@ async def media_receive_handler(c, m: Message):
             text='wait',
             quote=True
         )
-        if waiting[m.chat.id] >= 3:
+        if waiting[m.chat.id] >= 6:
             await edit_msg.edit_text(
                 text="Please wait until a upload is completed"
             )
-            while not waiting[m.chat.id] <= 2:
+            while not waiting[m.chat.id] <= 5:
                 await asyncio.sleep(1)
             print(f'wait to uploading {m.chat.id} - {waiting[m.chat.id]}')
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
