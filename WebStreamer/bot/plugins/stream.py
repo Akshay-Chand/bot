@@ -125,7 +125,7 @@ async def media_receive_handler(c, m: Message):
             except TimeoutError:
                 print("Couldn't connect to the site URL..!")
             except Exception:
-                await message.reply_text(text="<b>Bot Restarting Due To Errors.... </b>") 
+                await m.reply_text(text="<b>Bot Restarting Due To Errors.... </b>") 
                 args = [sys.executable, "-m", "WebStreamer"]
                 os.execl(sys.executable,*args)
                 async with aiohttp.ClientSession() as session:
