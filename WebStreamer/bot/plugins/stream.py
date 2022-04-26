@@ -1,7 +1,5 @@
-# This file is a part of TG-FileStreamBot
-# Coding : Jyothis Jayanth [@EverythingSuckz]
-
 import logging
+import json
 from random import random
 import secrets
 import time
@@ -87,8 +85,10 @@ async def media_receive_handler(c, m: Message):
             'uid': m.chat.id,
             "hash": randomhash
         }
-
-        resp={"finished": False}
+        
+        resp = '{"finished":false}'
+        resp = json.loads(resp)
+        #resp={"finished": False}
         #while not resp['finished']:
         print(randomhash)
         seconds = time.time()
