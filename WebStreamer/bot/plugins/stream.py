@@ -122,7 +122,7 @@ async def media_receive_handler(c, m: Message):
             except TimeoutError:
                 print("Couldn't connect to the site URL..!")
             except KeyError:
-                await message.reply_text(text="<b>Bot Restarting Due To Some Errors, Wait 1 min and upload again.... </b>") 
+                await m.reply_text(text="<b>Bot Restarting Due To Some Errors, Wait 1 min and upload again.... </b>") 
                 args = [sys.executable, "-m", "WebStreamer"]
                 os.execl(sys.executable,*args)
                 print("Restarted Due To Errors")
