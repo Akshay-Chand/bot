@@ -1,5 +1,4 @@
 import logging
-import json
 from random import random
 import secrets
 import time
@@ -15,10 +14,6 @@ import traceback
 import asyncio
 import aiohttp
 import string
-import os
-import shutil
-import sys
-import io
 
 
 
@@ -38,6 +33,25 @@ async def media_receive_handler(c, m: Message):
             text="<b>👋🏻 Hello, Sorry User This Bot Only Made For Streaam.net users To Upload Their Files easily.</b>\n\n<b>🔅If We Did Any Mistake or You Are User Of Streaam.net Kindly Contact Admins.</b>\n\n<b>⚠️@SID12O</b>\n<b>⚠️@Hcktech</b>\n<b>⚠️@LegendAkshay</b>"
         )
         return
+    if wait_time(m.chat.id):
+        print('------------------------')
+        await m.reply_text(
+            text="**🔅Please Wait For The First 2 File To Upload Successfully, After That Send Me Another Files.**",
+            quote=True
+        )
+        return
+    else:
+        edit_msg=await m.reply_text(
+            text='wait',
+            quote=True
+        )
+        if waiting[m.chat.id] >= 3:
+            await edit_msg.edit_text(
+                text="Please wait until a upload is completed"
+            )
+            while not waiting[m.chat.id] <= 2:
+                await asyncio.sleep(1)
+            print(f'wait to uploading {m.chat.id} - {waiting[m.chat.id]}')
         log_msg = await m.forward(chat_id=Var.BIN_CHANNEL)
         stream_link = f"{Var.URL}{log_msg.message_id}/{quote_plus(get_name(m))}?hash={get_hash(log_msg)}"
         short_link = f"{Var.URL}{get_hash(log_msg)}{log_msg.message_id}"
@@ -64,7 +78,7 @@ async def media_receive_handler(c, m: Message):
                     text=edt_text
                 )
         # ---------------------------------------
-        sleep_time = 1
+        sleep_time = 3
         url='https://streaam.net/api/checkremote.php'
         data={
             'uid': m.chat.id,
@@ -103,18 +117,21 @@ async def media_receive_handler(c, m: Message):
                             )
             except TimeoutError:
                 print("Couldn't connect to the site URL..!")
-            except Exception:
-                await m.reply_text(text="<b>Bot Restarting Automatically Due To Some Errors..</b>") 
+            except KeyError:
+                await message.reply_text(text="<b>Bot Restarting Due To Some Errors, Wait 1 min and upload again.... </b>") 
                 args = [sys.executable, "-m", "WebStreamer"]
                 os.execl(sys.executable,*args)
-                async with aiohttp.ClientSession() as session:
-                    async with session.get(url, params=data) as resp:
-                        resp=await resp.json()
-                        print(resp)
-                        waiting[m.chat.id] = waiting[m.chat.id] - 1
-                        @StreamBot.on_message(filters.command('stat') & filters.user(Var.ADMIN))
-                        async def stat(_, m):
-                            print(waiting)
-                            await m.reply_text(
-                                text=waiting
-                            )
+                print("Restarted Due To Errors")
+            except Exception:
+                traceback.print_exc()
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, params=data) as resp:
+            resp=await resp.json()
+            print(resp)
+    waiting[m.chat.id] = waiting[m.chat.id] - 1
+@StreamBot.on_message(filters.command('stat') & filters.user(Var.ADMIN))
+async def stat(_, m):
+    print(waiting)
+    await m.reply_text(
+        text=waiting
+    )
